@@ -1,7 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.css'
+import Header from '../components/header'
 
-const App = ({ Component, pageProps }) => {
-  return <Component {...pageProps} />
+const AppComponent = ({ Component, pageProps }) => {
+  return (
+    <div>
+      <Header {...pageProps} />
+      <Component {...pageProps} />
+    </div>
+  )
 }
 
-export default App
+export default AppComponent
