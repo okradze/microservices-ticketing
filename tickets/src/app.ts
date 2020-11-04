@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import cookieSession from 'cookie-session'
 
 import { errorHandler, currentUser, NotFoundError } from '@okradzemirian/ticketing-common'
+import { indexTicketRouter } from './routes/index'
 import { createTicketRouter } from './routes/new'
 import { showTicketRouter } from './routes/show'
 
@@ -16,6 +17,7 @@ app.use(cookieSession({
 }))
 app.use(currentUser)
 
+app.use(indexTicketRouter)
 app.use(createTicketRouter)
 app.use(showTicketRouter)
 
