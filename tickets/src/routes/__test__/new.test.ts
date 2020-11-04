@@ -3,7 +3,7 @@ import { app } from '../../app'
 import { signin } from '../../test/utils'
 import { Ticket } from '../../models/ticket'
 
-it('can only be accessed if the user is signed in', async () => {
+it('returns 404 if no route found', async () => {
   const response = await request(app)
     .post('/api/tickets')
     .send({})

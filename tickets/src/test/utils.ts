@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import mongoose from 'mongoose'
 
 export const signin = () => {
   const payload = {
@@ -12,3 +13,5 @@ export const signin = () => {
 
   return [`express:sess=${base64}`]
 }
+
+export const mongoId = () => new mongoose.Types.ObjectId().toHexString()

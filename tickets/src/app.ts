@@ -5,6 +5,7 @@ import cookieSession from 'cookie-session'
 
 import { errorHandler, currentUser, NotFoundError } from '@okradzemirian/ticketing-common'
 import { createTicketRouter } from './routes/new'
+import { showTicketRouter } from './routes/show'
 
 const app = express()
 app.set('trust proxy', true)
@@ -16,6 +17,7 @@ app.use(cookieSession({
 app.use(currentUser)
 
 app.use(createTicketRouter)
+app.use(showTicketRouter)
 
 app.all('*', () => {
   throw new NotFoundError()
