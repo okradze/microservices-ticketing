@@ -1,9 +1,11 @@
 import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
 
+export const mongoId = () => new mongoose.Types.ObjectId().toHexString()
+
 export const signin = () => {
   const payload = {
-    id: '1kjasflk',
+    id: mongoId(),
     email: 'test@test.com',
   }
 
@@ -13,5 +15,3 @@ export const signin = () => {
 
   return [`express:sess=${base64}`]
 }
-
-export const mongoId = () => new mongoose.Types.ObjectId().toHexString()
