@@ -7,14 +7,16 @@ const stan = nats.connect('ticketing', 'abc', {
   url: 'http://localhost:4222'
 })
 
-stan.on('connect', () => {
+stan.on('connect', async () => {
   console.log('publisher connected')
 
   const publisher = new TicketCreatedPublisher(stan)
   
-  publisher.publish({
+  await publisher.publish({
     id: '123',
     title: 'concert',
     price: 20,
   })
+
+  console.log('after published')
 })
