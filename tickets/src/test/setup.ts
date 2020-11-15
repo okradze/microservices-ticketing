@@ -3,7 +3,10 @@ import mongoose from 'mongoose'
 
 let mongo: any
 
+jest.mock('../nats-wrapper')
+
 beforeAll(async () => {
+  jest.clearAllMocks()
   process.env.JWT_KEY = 'secret'
 
   mongo = new MongoMemoryServer()

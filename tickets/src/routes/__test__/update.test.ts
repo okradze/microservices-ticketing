@@ -1,6 +1,7 @@
 import request from 'supertest'
 import { app } from '../../app'
 import { signin, mongoId } from '../../test/utils'
+import { natsWrapper } from '../../nats-wrapper'
 
 it('returns 404 if id does not exist', async () => {
   await request(app)
@@ -78,4 +79,23 @@ it('updates the ticket with valid inputs', async () => {
 
   expect(ticketResponse.body.title).toEqual('test1')
   expect(ticketResponse.body.price).toEqual(30)
+})
+
+it('publishes event', async () => {
+  const cookie = signin()
+  const response = await request(app)
+    .post('/api/tickets')
+    .set('Cookie', cookie)
+    .send({
+      title: 'test',
+      price: 20,
+    })
+
+  await request(app)
+    .put(`/api/tickets/${response.body.id}`)
+    .set('Cookie', cookie)
+    .send({ title: 'test1', price: 30 })
+    .expect(200)
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled()
 })
