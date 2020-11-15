@@ -11,6 +11,16 @@ const start = async () => {
   }
   
   try {
+    await natsWrapper.connect('ticketing', 'abc123', 'http://nats-srv:4222')
+
+    natsWrapper.client.on('close', () => {
+      console.log('NATS connection closed')
+      process.exit()
+    })
+    process.on('SIGINT', () => natsWrapper.client.close())
+    process.on('SIGTERM', () => natsWrapper.client.close())
+
+
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -20,8 +30,6 @@ const start = async () => {
   } catch (error) {
     console.error(error)
   }
-
-  await natsWrapper.connect('ticketing', 'abc123', 'http://nats-srv:4222')
 
   app.listen(3000, () => {
     console.log('Listening on port 3000!')
