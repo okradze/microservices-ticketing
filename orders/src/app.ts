@@ -4,10 +4,10 @@ import bodyParser from 'body-parser'
 import cookieSession from 'cookie-session'
 
 import { errorHandler, currentUser, NotFoundError } from '@okradzemirian/ticketing-common'
-import { indexTicketRouter } from './routes/index'
-import { createTicketRouter } from './routes/new'
-import { showTicketRouter } from './routes/show'
-import { updateTicketRouter } from './routes/update'
+import { indexOrderRouter } from './routes/index'
+import { newOrderRouter } from './routes/new'
+import { showOrderRouter } from './routes/show'
+import { deleteOrderRouter } from './routes/delete'
 
 const app = express()
 app.set('trust proxy', true)
@@ -18,10 +18,10 @@ app.use(cookieSession({
 }))
 app.use(currentUser)
 
-app.use(indexTicketRouter)
-app.use(createTicketRouter)
-app.use(showTicketRouter)
-app.use(updateTicketRouter)
+app.use(indexOrderRouter)
+app.use(newOrderRouter)
+app.use(showOrderRouter)
+app.use(deleteOrderRouter)
 
 app.all('*', () => {
   throw new NotFoundError()
