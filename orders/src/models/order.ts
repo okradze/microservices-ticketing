@@ -2,6 +2,8 @@ import mongoose from 'mongoose'
 import { OrderStatus } from '@okradzemirian/ticketing-common'
 import { TicketDoc } from './ticket'
 
+export { OrderStatus }
+
 interface OrderFields {
   userId: string,
   status: OrderStatus,
