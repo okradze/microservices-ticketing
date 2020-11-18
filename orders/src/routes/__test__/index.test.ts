@@ -48,6 +48,7 @@ it('fetches orders for a particular user', async () => {
   const { body: orders } = await request(app)
     .get('/api/orders')
     .set('Cookie', userTwo)
+    .send()
     .expect(200)
 
   expect(orders.length).toEqual(2)
