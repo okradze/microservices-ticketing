@@ -1,6 +1,6 @@
 import request from 'supertest'
 import { app } from '../../app'
-import { signin } from '../../test/utils'
+import { signin, mongoId } from '../../test/utils'
 import { Ticket } from '../../models/ticket'
 import { Order, OrderStatus } from '../../models/order'
 import { natsWrapper } from '../../nats-wrapper'
@@ -8,6 +8,7 @@ import { natsWrapper } from '../../nats-wrapper'
 it('marks an order as canceled', async () => {
   // create a ticket
   const ticket = Ticket.build({
+    id: mongoId(),
     title: 'concert',
     price:20,
   })
@@ -35,6 +36,7 @@ it('marks an order as canceled', async () => {
 
 it('emits an order canceled event', async () => {
   const ticket = Ticket.build({
+    id: mongoId(),
     title: 'concert',
     price:20,
   })

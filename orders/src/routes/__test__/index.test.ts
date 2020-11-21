@@ -1,11 +1,11 @@
 import request from 'supertest'
 import { app } from '../../app'
-import { signin } from '../../test/utils'
-import { Order } from '../../models/order'
+import { mongoId, signin } from '../../test/utils'
 import { Ticket } from '../../models/ticket'
 
 const buildTicket = () => {
   const ticket = Ticket.build({
+    id: mongoId(),
     title: 'concert',
     price: 20
   })
