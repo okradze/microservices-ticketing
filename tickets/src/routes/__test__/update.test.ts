@@ -2,6 +2,7 @@ import request from 'supertest'
 import { app } from '../../app'
 import { signin, mongoId } from '../../test/utils'
 import { natsWrapper } from '../../nats-wrapper'
+import { Ticket } from '../../models/ticket'
 
 it('returns 404 if id does not exist', async () => {
   await request(app)
@@ -54,6 +55,27 @@ it('returns 400 if the user provides an invalid title or price', async () => {
     .put(`/api/tickets/${response.body.id}`)
     .set('Cookie', cookie)
     .send({ price: -20 })
+    .expect(400)
+})
+
+it('rejects update if the ticket is reserved', async () => {
+  const cookie = signin()
+  const response = await request(app)
+    .post('/api/tickets')
+    .set('Cookie', cookie)
+    .send({
+      title: 'test',
+      price: 20,
+    })
+
+  const ticket = await Ticket.findById(response.body.id)
+  ticket!.set({ orderId: mongoId() })
+  await ticket!.save()
+
+  await request(app)
+    .put(`/api/tickets/${response.body.id}`)
+    .set('Cookie', cookie)
+    .send({ title: 'test1', price: 30 })
     .expect(400)
 })
 

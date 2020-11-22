@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import { body } from 'express-validator'
-import { validateRequest, NotFoundError, NotAuthorizedError, requireAuth } from '@okradzemirian/ticketing-common'
+import { validateRequest, NotFoundError, NotAuthorizedError, requireAuth, BadRequestError } from '@okradzemirian/ticketing-common'
 import { natsWrapper } from '../nats-wrapper'
 import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher'
 import { Ticket } from '../models/ticket'
@@ -18,6 +18,10 @@ router.put('/api/tickets/:id', requireAuth, [
 ], validateRequest, async (req: Request, res: Response) => {
   const ticket = await Ticket.findById(req.params.id)
   if(!ticket) throw new NotFoundError()
+
+  if(ticket.orderId) {
+    throw new BadRequestError('Ticket is reserved')
+  }
 
   if(ticket.userId !== req.currentUser!.id) throw new NotAuthorizedError()
 
