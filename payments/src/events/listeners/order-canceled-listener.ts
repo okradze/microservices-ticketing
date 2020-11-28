@@ -1,6 +1,6 @@
 import { Message } from 'node-nats-streaming'
 import { Listener, Subjects, OrderCanceledEvent, OrderStatus } from '@okradzemirian/ticketing-common'
-import { queueGroupName } from './queueGroupName'
+import { queueGroupName } from './queue-group-name'
 import { Order } from '../../models/order'
 
 export class OrderCanceledListener extends Listener<OrderCanceledEvent> {
