@@ -3,7 +3,9 @@ import { body } from 'express-validator'
 import { requireAuth, validateRequest, BadRequestError, NotFoundError, NotAuthorizedError, OrderStatus } from '@okradzemirian/ticketing-common'
 import { Order } from '../models/order'
 import { Payment } from '../models/payment'
+import { PaymentCreatedPublisher } from '../events/publishers/payment-created-publisher'
 import { stripe } from '../stripe'
+import { natsWrapper } from '../nats-wrapper'
 
 const router = express.Router()
 
@@ -32,6 +34,12 @@ router.post('/api/payments', requireAuth, [
     stripeId: charge.id,
   })
   await payment.save()
+
+  new PaymentCreatedPublisher(natsWrapper.client).publish({
+    id: payment.id,
+    stripeId: payment.stripeId,
+    orderId: payment.orderId,
+  })
 
   res.status(201).send({ success: true })
 })
