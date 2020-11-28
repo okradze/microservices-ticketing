@@ -3,9 +3,9 @@ import mongoose from 'mongoose'
 
 export const mongoId = () => new mongoose.Types.ObjectId().toHexString()
 
-export const signin = () => {
+export const signin = (id?: string) => {
   const payload = {
-    id: mongoId(),
+    id: id || mongoId(),
     email: 'test@test.com',
   }
 
