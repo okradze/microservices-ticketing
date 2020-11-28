@@ -2,6 +2,7 @@ import request from 'supertest'
 import { app } from '../../app'
 import { mongoId, signin } from '../../test/utils'
 import { Order, OrderStatus } from '../../models/order'
+import { Payment } from '../../models/payment'
 import { stripe } from '../../stripe'
 
 jest.mock('../../stripe')
@@ -77,7 +78,16 @@ it('returns 201 with valid inputs', async () => {
     .expect(201)
 
   const chargeOptions = (stripe.charges.create as jest.Mock).mock.calls[0][0]
+  const chargeResult = await (stripe.charges.create as jest.Mock).mock.results[0].value;
+
   expect(chargeOptions.source).toEqual('tok_visa')
   expect(chargeOptions.amount).toEqual(20 * 100)
   expect(chargeOptions.currency).toEqual('usd')
+  
+  const payment = await Payment.findOne({ orderId: order.id, stripeId: chargeResult!.id })
+
+  // expect(payment).not.toBeNull()
+  expect(payment).not.toBeNull()
+  expect(payment!.orderId).toEqual(order.id);
+  expect(payment!.stripeId).toEqual(chargeResult.id);
 })
