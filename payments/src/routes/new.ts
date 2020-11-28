@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import { body } from 'express-validator'
 import { requireAuth, validateRequest, BadRequestError, NotFoundError, NotAuthorizedError, OrderStatus } from '@okradzemirian/ticketing-common'
 import { Order } from '../models/order'
+import { stripe } from '../stripe'
 
 const router = express.Router()
 
@@ -18,7 +19,13 @@ router.post('/api/payments', requireAuth, [
   const order = await Order.findById(orderId)
   if(!order) throw new NotFoundError()
   if(order.userId !== req.currentUser!.id) throw new NotAuthorizedError()
-  if(order.status = OrderStatus.Canceled) throw new BadRequestError('Order is canceled')
+  if(order.status === OrderStatus.Canceled) throw new BadRequestError('Order is canceled')
+
+  await stripe.charges.create({
+    currency: 'usd',
+    amount: order.price * 100,
+    source: token,
+  })
 
   res.send({ success: true })
 })
