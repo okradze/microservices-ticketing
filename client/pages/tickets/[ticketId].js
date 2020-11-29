@@ -1,0 +1,27 @@
+import useRequest from '../../hooks/useRequest'
+
+const TicketShow = ({ ticket }) => {
+  const { doRequest, errors } = useRequest({
+    url: '/api/orders',
+    method: 'post',
+    body: { ticketId: ticket.id },
+    onSuccess: (order) => console.log(order)
+  })
+
+  return (
+    <div>
+      <h2>{ticket.title}</h2>
+      <h3>{ticket.price}$</h3>
+      {errors}
+      <button onClick={doRequest} className='btn btn-primary'>Purchase</button>
+    </div>
+  )
+}
+
+TicketShow.getInitialProps = async (context, client) => {
+  const { ticketId } = context.query
+  const { data } = await client.get(`/api/tickets/${ticketId}`)
+  return { ticket: data }
+}
+
+export default TicketShow

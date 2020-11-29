@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 const Index = ({ tickets }) => {
   return (
     <div>
@@ -7,6 +9,7 @@ const Index = ({ tickets }) => {
           <tr>
             <th>Title</th>
             <th>Price</th>
+            <th>Link</th>
           </tr>
         </thead>
         <tbody>
@@ -14,6 +17,11 @@ const Index = ({ tickets }) => {
             <tr key={ticket.id}>
               <td>{ticket.title}</td>
               <td>{ticket.price}</td>
+              <td>
+                <Link href="/tickets/[ticketId]" as={`/tickets/${ticket.id}`}>
+                  <a>View</a>
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>
