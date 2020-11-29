@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import Router from 'next/router'
-import buildClient from '../../api/build-client'
 import useRequest from '../../hooks/useRequest'
 
 const SignUp = () => {
@@ -34,12 +33,6 @@ const SignUp = () => {
       <button className='btn btn-primary'>Sign Up</button>
     </form>
   )
-}
-
-export const getServerSideProps = async (context) => {
-  const client = buildClient(context)
-  const { data } = await client.get('/api/users/currentuser')
-  return { props: data }
 }
 
 export default SignUp
