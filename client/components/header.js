@@ -1,14 +1,14 @@
-import Router from 'next/router'
 import Link from './link'
-import useRequest from '../hooks/useRequest'
 
 const Header = ({ currentUser }) => {
-  const { doRequest } = useRequest({
-    url: '/api/users/signout',
-    method: 'post',
-    body: {},
-    onSuccess: () => Router.push('/')
-  })
+  const links = [
+    !currentUser && { label: 'Sign Up', href: '/auth/signup' },
+    !currentUser && { label: 'Sign In', href: '/auth/signin' },
+    
+    currentUser && { label: 'Sell Tickets', href: '/tickets/new' },
+    currentUser && { label: 'My Orders', href: '/orders' },
+    currentUser && { label: 'Sign Out', href: '/auth/signout' },
+  ].filter(linkConfig => linkConfig)
   
   return (
     <nav className='navbar navbar-light bg-light'>
@@ -16,14 +16,13 @@ const Header = ({ currentUser }) => {
 
       <div className='d-flex justify-content-end'>
         <ul className='nav d-flex align-items-center'>
-          {currentUser ? (
-            <Link href='/' onClick={() => doRequest()}>Sign Out</Link>
-          ) : (
-            <>
-            <Link href='/auth/signin'>Sign In</Link>
-            <Link href='/auth/signup'>Sign Up</Link>
-            </>
-          )}
+          {links.map(({ label, href }) => (
+            <li key={href} className='nav-item'>
+              <Link href={href}>
+                <a className='nav-link'>{label}</a>
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
     </nav>
